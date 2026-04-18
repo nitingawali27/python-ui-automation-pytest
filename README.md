@@ -1,13 +1,14 @@
 # Automation Testing with Python
 
-A beginner-friendly Python automation testing framework using **Pytest** and **Selenium WebDriver**. This framework makes it easy to write and maintain UI tests for web applications.
+A beginner-friendly Python automation testing framework using **Pytest** and **Selenium WebDriver**. This framework makes it easy to write and maintain UI tests for web applications with automatic driver management, HTML reports, and comprehensive logging.
 
 ## Features
 
 - **Modular Design**: Separate locators, tests, and utilities for maintainability
 - **Cross-Browser Support**: Run tests on Chrome, Firefox, or IE
+- **Automatic Driver Management**: Selenium 4+ automatically downloads compatible drivers
 - **HTML Reports**: Automatic test reports with screenshots on failure
-- **Logging**: Detailed execution logs for debugging
+- **Logging**: Detailed execution logs with timestamps
 - **Easy Configuration**: Centralized settings in `config.py`
 
 ---
@@ -18,6 +19,7 @@ Before you begin, ensure you have:
 
 - **Python 3.7+** installed ([Download Python](https://www.python.org/downloads/))
 - **Chrome** or **Firefox** browser installed
+- **Git** for cloning the repository
 - Basic knowledge of Python
 
 ---
@@ -47,26 +49,15 @@ source venv/bin/activate
 ### Step 3: Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install pytest selenium pytest-html
 ```
 
 This installs:
-- `selenium` - WebDriver for browser automation
 - `pytest` - Testing framework
+- `selenium` - WebDriver for browser automation (4.x with automatic driver management)
 - `pytest-html` - HTML report generation
 
-### Step 4: Download WebDriver
-
-Download the appropriate WebDriver for your browser and place it in `src/drivers/`:
-
-| Browser | Download Link | File Name |
-|---------|---------------|-----------|
-| Chrome | [ChromeDriver](https://chromedriver.chromium.org/downloads) | `chromedriver.exe` |
-| Firefox | [GeckoDriver](https://github.com/mozilla/geckodriver/releases) | `geckodriver.exe` |
-
-> **Important**: The ChromeDriver version must match your Chrome browser version.
-
-### Step 5: Run Tests
+### Step 4: Run Tests
 
 ```bash
 # Run all tests (default browser: Chrome)
@@ -75,6 +66,12 @@ pytest
 # Run with Firefox
 pytest --browser_name firefox
 
+# Run in headless mode (no browser window visible)
+pytest --headless
+
+# Combine options: Firefox in headless mode
+pytest --browser_name firefox --headless
+
 # Run specific test file
 pytest tests/test_google_search_page.py
 
@@ -82,7 +79,7 @@ pytest tests/test_google_search_page.py
 pytest -v
 ```
 
-### Step 6: View Results
+### Step 5: View Results
 
 - **HTML Report**: Open `src/reports/report.html` in your browser
 - **Logs**: Check `src/logs/logfile.log`
@@ -98,7 +95,8 @@ automation-testing-python-selenium/
 ├── config.py                    # Framework configuration
 ├── conftest.py                  # Pytest fixtures and hooks
 ├── pytest.ini                   # Pytest settings
-├── requirements.txt             # Python dependencies
+├── requirements.txt             # Python dependencies (see note below)
+├── CLAUDE.md                    # Guide for Claude Code AI assistant
 │
 ├── locator/                     # Page element locators
 │   ├── __init__.py
@@ -106,7 +104,7 @@ automation-testing-python-selenium/
 │   └── google_homepage_locator.py
 │
 ├── src/                         # Framework resources
-│   ├── drivers/                 # WebDriver executables
+│   ├── drivers/                 # WebDriver executables (optional, auto-managed)
 │   ├── logs/                    # Execution logs
 │   ├── media/download/          # Downloaded files
 │   └── reports/                 # Test reports
@@ -116,6 +114,8 @@ automation-testing-python-selenium/
     ├── test_github_login.py
     └── test_google_search_page.py
 ```
+
+**Note on `requirements.txt`**: The original requirements.txt contains pinned versions that may be incompatible with newer Python versions. Use `pip install pytest selenium pytest-html` instead for the latest compatible versions.
 
 ---
 
@@ -198,13 +198,22 @@ Edit `config.py` to customize framework behavior:
 
 ### Run a Single Test
 ```bash
-pytest tests/test_github_login.py::TestGithubPage::test_1_login_wrong_username_wrong_password
+pytest tests/test_github_login.py::TestGithubPage::test_1_login_wrong_username_wrong_password -v
 ```
 
 ### Run Tests in Headless Mode
+
+**Option 1: Command-line flag (Recommended)**
+```bash
+pytest --headless
+```
+
+**Option 2: Configuration file**
 1. Edit `config.py`
 2. Set `HEADLESS = True`
 3. Run `pytest`
+
+**Note**: The command-line flag `--headless` takes precedence over the config file setting.
 
 ### Debug a Failing Test
 1. Check the HTML report: `src/reports/report.html`
@@ -223,11 +232,11 @@ BASE_URL = "https://your-website.com/"
 
 | Problem | Solution |
 |---------|----------|
-| `WebDriverException: chromedriver not found` | Download ChromeDriver and place in `src/drivers/` |
-| `SessionNotCreatedException` | ChromeDriver version doesn't match Chrome version. Download matching versions. |
+| `SessionNotCreatedException` | Selenium 4+ automatically manages drivers. If issues persist, update selenium: `pip install -U selenium` |
 | Tests fail with "element not found" | Increase `WEB_DRIVER_WAIT` in `config.py` |
 | Tests are flaky | Increase `ACTION_DELAY` in `config.py` |
 | Reports not generating | Check that `src/reports/` folder exists and is writable |
+| `FileNotFoundError` for logs folder | The framework auto-creates the logs folder. If issue persists, create manually: `mkdir src/logs` |
 
 ---
 

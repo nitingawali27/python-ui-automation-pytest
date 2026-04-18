@@ -31,15 +31,25 @@ driver = None
 
 def pytest_addoption(parser):
     """
-    Add a custom command-line option for selecting the browser.
+    Add custom command-line options for test configuration.
+
+    Available Options:
+        --browser_name: Select browser (chrome, firefox)
+        --headless: Run tests in headless mode (no browser window)
 
     Usage:
-        pytest --browser_name chrome      # Run tests in Chrome (default)
-        pytest --browser_name firefox     # Run tests in Firefox
+        pytest --browser_name chrome          # Run tests in Chrome (default)
+        pytest --browser_name firefox         # Run tests in Firefox
+        pytest --headless                     # Run in headless mode
+        pytest --browser_name firefox --headless  # Combine options
     """
     parser.addoption(
         "--browser_name", action="store", default="chrome",
         help="Browser to run tests in: chrome, firefox, or IE"
+    )
+    parser.addoption(
+        "--headless", action="store_true", default=None,
+        help="Run tests in headless mode (no browser window visible)"
     )
 
 
@@ -67,8 +77,12 @@ def setup(request):
     """
     global driver
 
-    # Get the browser name from command-line argument (default: chrome)
+    # Get command-line options
     browser_name = request.config.getoption("browser_name")
+    headless_option = request.config.getoption("headless")
+
+    # Determine headless mode: command-line flag takes precedence over config
+    is_headless = headless_option if headless_option is not None else config.HEADLESS
 
     # Initialize the appropriate WebDriver based on browser choice
     if browser_name == "chrome":
@@ -82,19 +96,32 @@ def setup(request):
         })
 
         # Add headless mode if configured
-        if config.HEADLESS:
+        if is_headless:
             chrome_options.add_argument('--headless')
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
+            chrome_options.add_argument('--disable-gpu')
+            chrome_options.add_argument('--window-size=1920,1080')
+            print("==================== Launching Chrome Browser (Headless)")
+        else:
+            print("==================== Launching Chrome Browser")
 
         # Start Chrome - Selenium 4+ automatically manages ChromeDriver
-        print("==================== Launching Chrome Browser")
         driver = webdriver.Chrome(options=chrome_options)
 
     elif browser_name == "firefox":
+        # Configure Firefox options
+        firefox_options = webdriver.FirefoxOptions()
+
+        # Add headless mode if configured
+        if is_headless:
+            firefox_options.add_argument('--headless')
+            print("==================== Launching Firefox Browser (Headless)")
+        else:
+            print("==================== Launching Firefox Browser")
+
         # Start Firefox - Selenium 4+ automatically manages geckodriver
-        print("==================== Launching Firefox Browser")
-        driver = webdriver.Firefox()
+        driver = webdriver.Firefox(options=firefox_options)
 
     elif browser_name == "IE":
         print("IE driver support is available but requires additional configuration")

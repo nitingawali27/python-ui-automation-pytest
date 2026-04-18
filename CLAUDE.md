@@ -17,6 +17,12 @@ pytest
 pytest --browser_name firefox
 pytest --browser_name chrome
 
+# Run in headless mode (no browser window visible)
+pytest --headless
+
+# Combine options: Firefox in headless mode
+pytest --browser_name firefox --headless
+
 # Run a single test file
 pytest tests/test_google_search_page.py
 
@@ -123,8 +129,8 @@ class TestFeatureName(BaseClass):
 
 ## Important Notes
 
-- **Driver executables** must exist in `src/drivers/` (`chromedriver.exe`, `geckodriver.exe`)
+- **Driver Management**: Selenium 4+ automatically downloads and manages ChromeDriver/GeckoDriver. Manual setup in `src/drivers/` is optional.
 - **BASE_URL** in `config.py` is the initial URL; tests can navigate elsewhere via `self.driver.get(url)`
 - **Test order**: Methods execute alphabetically; use `test_1_`, `test_2_` prefixes to control order
-- **Headless mode**: Set `HEADLESS = True` in `config.py` for Chrome headless execution
+- **Headless mode**: Use `--headless` flag or set `HEADLESS = True` in `config.py`. Command-line flag takes precedence.
 - **Screenshots on failure**: Automatically captured and embedded in HTML reports
