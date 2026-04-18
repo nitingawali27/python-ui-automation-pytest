@@ -1,157 +1,261 @@
-# automation_testing_with_python
+# Automation Testing with Python
 
-This is a framework that will make your life easier in the field of automation testing. The goal of this framework is to making automation testing as easier as python that any one can learn and start using easily. your support will be highly appriciated in this process of making this as the easiest and effective framework in the field of automation testing. Please join us by contributing your inputs and giving this repo a star.  
+A beginner-friendly Python automation testing framework using **Pytest** and **Selenium WebDriver**. This framework makes it easy to write and maintain UI tests for web applications.
 
-https://user-images.githubusercontent.com/50165036/154853172-5a883d20-1fc3-4fbc-a4f8-7411dab2954c.mp4
+## Features
 
-#### Below are few useful features of this framework
-- Modular Design.
-- Report generation.
-- Mailer to send the report.
-- Events Log.
-#### Prerequisite
-- High learning sprit towards automation
-- Basic knowledge in python
+- **Modular Design**: Separate locators, tests, and utilities for maintainability
+- **Cross-Browser Support**: Run tests on Chrome, Firefox, or IE
+- **HTML Reports**: Automatic test reports with screenshots on failure
+- **Logging**: Detailed execution logs for debugging
+- **Easy Configuration**: Centralized settings in `config.py`
 
-## Quick Start
-- ##### Clone Framework
-    <pre>
-    git clone https://github.com/jagwithyou/automation-testing-python-selenium.git</pre>
-- ##### Copy the web_ui_testing folder to your project location and open command prompt from there.
-    
-- ##### Create and activate virtual environment
-    <pre>
-    python -m venv ENVIRONMENT_NAME
-    ENVIRONMENT_NAME\scripts\activate</pre>
-- ##### Install required Python Packages
-    <pre>
-    pip install -r requirements.txt</pre>
-- ##### Run the test
-    <pre>
-    pytest</pre>
-- ##### Work on project
-    Congratulations! framework is ready you can add new testcases now.
+---
 
-## Folder Structure
-- web_ui_testing
-    - Locators 
-    - src
-        - Drivers 
-        - logs
-        - Reports
-        - Utility
-    - Tests
-    - Config.py
-    - Conftest.py
- - api-testing
-    - releasing soon
+## Prerequisites
 
-## Web UI Testing:
-### Folder Description
-**Driver**
-- As selenium supports different drivers for different browsers, this folder contains the web drivers that we are going to use on our project.
-    Ex:- For chrome browser:- chomedriver.exe
+Before you begin, ensure you have:
 
-**Locators**
-- Locator is the unique identifier for any element using which we can find the element. 
-- Locators can be formed: 
-    1) By X-path, 
-    2) By CSS 
-    3) By ID 
-    4) By attribute
+- **Python 3.7+** installed ([Download Python](https://www.python.org/downloads/))
+- **Chrome** or **Firefox** browser installed
+- Basic knowledge of Python
 
-- Let's take a example of a submit button whose xpath is //button[@type='submit 
-- The locator for the submit button will be:
-    SUBMIT_BUTTON = (By.XPATH, "//button[@type='submit']")
- 
+---
 
-**Logs**
-- Contains the test execution logs
+## Quick Start Guide
 
-**Reports**
-- Contains the test case execution report file after test case execution.
+### Step 1: Clone the Repository
 
-**Tests**
-- Contains test cases 
-- All the functionality and UI test cases should be created inside this folder
-- For parallel test case execution all the test case prefix should be uniform.
-- To test the user login create a test case as "test_user_login.py".
+```bash
+git clone https://github.com/jagwithyou/automation-testing-python-selenium.git
+cd automation-testing-python-selenium
+```
 
+### Step 2: Set Up Virtual Environment (Recommended)
 
-**Utility**
-- this is the utility folder where you should keep your utilities. You can get a large collection of utilities from the [Utilities_repo](../../utilities)
- 
-**Config.py**
-- A config.py (configuration) file contains all the settings that you can change as per your requirements.
+```bash
+# Create virtual environment
+python -m venv venv
 
+# Activate virtual environment (Windows)
+venv\scripts\activate
 
-**Conftest.py**
-- conftest is the test configuration file for pytest using which we can change the way pytest is working. From adding the setup and teardown to every test case to import external plugins or modules we can configure these easily.
+# Activate virtual environment (Mac/Linux)
+source venv/bin/activate
+```
 
+### Step 3: Install Dependencies
 
-### How to work with this framework
-Suppose you want to test the google search bar (which you have seen in the demo; you can relate the flow with the existing code to understand better).
+```bash
+pip install -r requirements.txt
+```
 
-#### **Step-1**
-As we want to test google, the project url will be google.com. you have to assign this to the BASE_URL variable.
-<pre>
-BASE_URL = "https://www.google.com/"
-</pre>
+This installs:
+- `selenium` - WebDriver for browser automation
+- `pytest` - Testing framework
+- `pytest-html` - HTML report generation
 
-#### **Step-2**
-Now we have to create a locator file for maintaining all the locators of a page. For a better use create individual locator files for each of the pages of your project. In our case we have created the locator file named google_homepage_locator and declared the locator inside this.
-<pre>
+### Step 4: Download WebDriver
+
+Download the appropriate WebDriver for your browser and place it in `src/drivers/`:
+
+| Browser | Download Link | File Name |
+|---------|---------------|-----------|
+| Chrome | [ChromeDriver](https://chromedriver.chromium.org/downloads) | `chromedriver.exe` |
+| Firefox | [GeckoDriver](https://github.com/mozilla/geckodriver/releases) | `geckodriver.exe` |
+
+> **Important**: The ChromeDriver version must match your Chrome browser version.
+
+### Step 5: Run Tests
+
+```bash
+# Run all tests (default browser: Chrome)
+pytest
+
+# Run with Firefox
+pytest --browser_name firefox
+
+# Run specific test file
+pytest tests/test_google_search_page.py
+
+# Run with verbose output
+pytest -v
+```
+
+### Step 6: View Results
+
+- **HTML Report**: Open `src/reports/report.html` in your browser
+- **Logs**: Check `src/logs/logfile.log`
+- **Screenshots**: Available in `src/reports/tests/` (captured on test failure)
+
+---
+
+## Project Structure
+
+```
+automation-testing-python-selenium/
+│
+├── config.py                    # Framework configuration
+├── conftest.py                  # Pytest fixtures and hooks
+├── pytest.ini                   # Pytest settings
+├── requirements.txt             # Python dependencies
+│
+├── locator/                     # Page element locators
+│   ├── __init__.py
+│   ├── github_login_page_locator.py
+│   └── google_homepage_locator.py
+│
+├── src/                         # Framework resources
+│   ├── drivers/                 # WebDriver executables
+│   ├── logs/                    # Execution logs
+│   ├── media/download/          # Downloaded files
+│   └── reports/                 # Test reports
+│
+└── tests/                       # Test cases
+    ├── __init__.py              # BaseClass with utilities
+    ├── test_github_login.py
+    └── test_google_search_page.py
+```
+
+---
+
+## How to Write a New Test
+
+Follow these steps to add a new test to the framework:
+
+### Step 1: Create Locators (if testing a new page)
+
+Create a new file in `locator/` (e.g., `locator/my_page_locator.py`):
+
+```python
 from selenium.webdriver.common.by import By
 
-SEARCH_BAR = (By.NAME, "q")
-</pre>
+# Define elements on the page
+USERNAME_FIELD = (By.NAME, "username")
+PASSWORD_FIELD = (By.ID, "password")
+LOGIN_BUTTON = (By.XPATH, "//button[@type='submit']")
+```
 
-#### **Step-3 - Perform the Action**
-Now we are ready to write the test script. For that create a file inside tests folder and name it as test_FILENAME.py. As you can rightly guess each test script file should start with ***test_
+### Step 2: Create Test File
 
-Inside the script the code looks like below.
-<pre>
+Create a new file in `tests/` (e.g., `tests/test_my_feature.py`):
+
+```python
 from tests import BaseClass
-from locator.google_homepage_locator import *
-from selenium.webdriver.common.keys import Keys
+from locator.my_page_locator import *
 
-class TestGooglePage(BaseClass):
-    def test_1_search(self):
-        ''' This is a test case to test the Google Search Page page. '''
-        #Instantiating the logger
-        self.log().info("Google Search Page Test Started")
-        #accessing the search field and sending text to that
-        self.get_element(SEARCH_BAR).send_keys('Automation Testing Python Selenium')
-        self.get_element(SEARCH_BAR).send_keys(Keys.RETURN)
-        #logging the test success
-        self.log().info("Test Success")
-        assert True
+class TestMyFeature(BaseClass):
+    """Test suite for my feature."""
 
-</pre>
+    def test_1_login_success(self):
+        """Test that user can log in with valid credentials."""
+        # Log test start
+        self.log().info("Starting login test")
 
+        # Navigate to the page (if not using BASE_URL)
+        self.driver.get("https://example.com/login")
 
-As you can see first we have declared a class that is inherited from the BaseClass and inside it we are writing the test cases. you can assume this class as the ***TestSuite*** and each of the methods as the testcases inside the test-suite. you can write number of testcases inside this class. All the test cases should start as ***test_*** and they are executed alphabetically. so if you want any order of execution then please mention as ***test_1_***. You can give any number (1,2,3) and they will be executed with this order.
+        # Enter username
+        self.get_element(USERNAME_FIELD).send_keys("my_username")
 
-The next line is for log if you don't want log you can skip it. After that the operation starts. give your attention to the below three lines.
+        # Enter password
+        self.get_element(PASSWORD_FIELD).send_keys("my_password")
 
-<pre>
-#accessing the search field and sending text to that
-self.get_element(SEARCH_BAR).send_keys('Automation Testing Python Selenium')
-self.get_element(SEARCH_BAR).send_keys(Keys.RETURN)        
-</pre>
+        # Click login button
+        self.get_element(LOGIN_BUTTON).click()
 
-1. self.get_element() - it is a method that takes the locator and return the element object to perform operation.
-2. send_keys() - This sends some value to the object. Here it is sending the Text to the search bar of google. These are pytest derived methods and you can get the list from the pytest documentation. 
-3. Keys.RETURN - It works like we are clicking the Enter Key after writing our query.
+        # Assert expected result
+        assert "dashboard" in self.driver.current_url
 
-#### Step-4 - Running the script
-We can run the complete testing by using the below command
-<pre>
-pytest
-</pre>
-If you want to run in a different browser then you can add one more argument here like below.
-<pre>
-pytest --browser_name firefox
-</pre>
+        self.log().info("Login test passed")
+```
 
-Awesome we have done this. Similarly you can follow step 2,3,4 to write automation for each of the field.
+### Step 3: Run Your Test
+
+```bash
+# Run your specific test file
+pytest tests/test_my_feature.py -v
+```
+
+---
+
+## Configuration Guide
+
+Edit `config.py` to customize framework behavior:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `BASE_URL` | Starting URL for tests | `"https://www.google.com/"` |
+| `WEB_DRIVER_WAIT` | Maximum wait time for elements (seconds) | `60` |
+| `HEADLESS` | Run browser without visible window | `False` |
+| `ACTION_DELAY` | Delay between actions (seconds) | `2` |
+| `INDIVIDUAL_REPORT` | Create timestamped report folders | `False` |
+| `REPORT_TITLE` | Title in HTML report | `"Orange HRM Testing"` |
+
+---
+
+## Common Tasks
+
+### Run a Single Test
+```bash
+pytest tests/test_github_login.py::TestGithubPage::test_1_login_wrong_username_wrong_password
+```
+
+### Run Tests in Headless Mode
+1. Edit `config.py`
+2. Set `HEADLESS = True`
+3. Run `pytest`
+
+### Debug a Failing Test
+1. Check the HTML report: `src/reports/report.html`
+2. View the screenshot in `src/reports/tests/`
+3. Read the log file: `src/logs/logfile.log`
+
+### Change the Starting URL
+Edit `config.py` and modify `BASE_URL`:
+```python
+BASE_URL = "https://your-website.com/"
+```
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `WebDriverException: chromedriver not found` | Download ChromeDriver and place in `src/drivers/` |
+| `SessionNotCreatedException` | ChromeDriver version doesn't match Chrome version. Download matching versions. |
+| Tests fail with "element not found" | Increase `WEB_DRIVER_WAIT` in `config.py` |
+| Tests are flaky | Increase `ACTION_DELAY` in `config.py` |
+| Reports not generating | Check that `src/reports/` folder exists and is writable |
+
+---
+
+## Contributing
+
+We welcome contributions! Here's how:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please give this repository a star if you find it helpful!
+
+---
+
+## License
+
+This project is open source. Feel free to use, modify, and distribute.
+
+---
+
+## Support
+
+If you encounter issues:
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review the logs in `src/logs/logfile.log`
+3. Create an issue in the GitHub repository
+
+Happy Testing!
